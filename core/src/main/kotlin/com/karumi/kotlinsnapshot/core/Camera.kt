@@ -105,5 +105,5 @@ class Camera<in A>(
     }
 
     private fun isTestMethod(method: Method): Boolean =
-        method.annotations.any { TEST_ANNOTATION == it.annotationClass.qualifiedName  }
+        method.annotations.any { TEST_ANNOTATION == it.annotationClass.qualifiedName }
 }

@@ -1,6 +1,5 @@
 package com.karumi.kotlinsnapshot.core
 
-import com.karumi.kotlinsnapshot.exceptions.TestNameNotFoundException
 import com.karumi.kotlinsnapshot.matchWithSnapshot
 import org.junit.Test
 
