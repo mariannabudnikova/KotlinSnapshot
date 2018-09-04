@@ -3,11 +3,11 @@ package com.karumi.kotlinsnapshot.core
 import com.karumi.kotlinsnapshot.exceptions.TestNameNotFoundException
 import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch
 import java.io.File
-import java.lang.reflect.Method
 import java.nio.file.Paths
 
-class Camera<in A>(
+internal class Camera<in A>(
     private val serializationModule: SerializationModule<A>,
+    private val extractor: TestCaseExtractor,
     relativePath: String = ""
 ) {
     private val snapshotDir: File
@@ -60,8 +60,6 @@ class Camera<in A>(
     }
 
     private companion object {
-        private const val TEST_ANNOTATION = "org.junit.Test"
-
         private val purgedDirectories = HashSet<String>()
         fun createSnapshotDir(relativePath: String): File {
             val dir = System.getProperty("user.dir")
@@ -84,16 +82,7 @@ class Camera<in A>(
     }
 
     private fun extractTestCaseName(): String {
-        val stackTrace = Thread.currentThread().stackTrace
-        val testCaseTrace = stackTrace.toList().firstOrNull { trace ->
-            try {
-                val traceClass = Class.forName(trace.className)
-                val method = traceClass.getMethod(trace.methodName)
-                isTestMethod(method)
-            } catch (exception: Exception) {
-                false
-            }
-        }
+        val testCaseTrace = extractor.getTestStackElement()
         if (testCaseTrace != null) {
             return "${testCaseTrace.className}_${testCaseTrace.methodName}"
         } else {
@@ -103,7 +92,4 @@ class Camera<in A>(
                 "to use Kotlin Snapshot")
         }
     }
-
-    private fun isTestMethod(method: Method): Boolean =
-        method.annotations.any { TEST_ANNOTATION == it.annotationClass.qualifiedName }
 }

@@ -1,5 +1,6 @@
 package com.karumi.kotlinsnapshot.core
 
+import com.karumi.kotlinsnapshot.exceptions.TestNameNotFoundException
 import com.karumi.kotlinsnapshot.matchWithSnapshot
 import org.junit.Test
 
@@ -29,13 +30,18 @@ class InferenceNameSpec {
     }
 }
 
-class ValidClassName {
+class InferenceNameNotSupported {
 
-    @Test
-    fun the_snap_test_name_will_be_inferred_even_the_test_class_does_not_contains_test_or_spec(
-    ) {
+    private val snap = Camera(KotlinSerialization(), TestCaseExtractorNotSupported())
+
+    @Test(expected = TestNameNotFoundException::class)
+    fun if_the_test_name_can_not_be_found_and_exception_will_be_thrown() {
         val fran = Developer("Fran", 1)
-        fran.matchWithSnapshot()
+        snap.matchWithSnapshot(fran)
+    }
+
+    private class TestCaseExtractorNotSupported : TestCaseExtractor() {
+        override fun getTestStackElement(): StackTraceElement? = null
     }
 }
 
