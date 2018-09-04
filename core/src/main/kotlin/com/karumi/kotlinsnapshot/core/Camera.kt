@@ -3,6 +3,7 @@ package com.karumi.kotlinsnapshot.core
 import com.karumi.kotlinsnapshot.exceptions.TestNameNotFoundException
 import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch
 import java.io.File
+import java.lang.reflect.Method
 import java.nio.file.Paths
 
 class Camera<in A>(
@@ -59,6 +60,8 @@ class Camera<in A>(
     }
 
     private companion object {
+        private const val TEST_ANNOTATION = "org.junit.Test"
+
         private val purgedDirectories = HashSet<String>()
         fun createSnapshotDir(relativePath: String): File {
             val dir = System.getProperty("user.dir")
@@ -83,14 +86,13 @@ class Camera<in A>(
     private fun extractTestCaseName(): String {
         val stackTrace = Thread.currentThread().stackTrace
         val testCaseTrace = stackTrace.toList().firstOrNull { trace ->
-            val completeClassName = trace.className.toLowerCase()
-            val packageName = completeClassName.substringBeforeLast(".", "")
-            val isAJUnitClass = packageName
-                .contains("junit")
-            val isAGradleClass = packageName.contains("org.gradle.api.internal.tasks.testing")
-            val isATestClass = completeClassName.contains("test")
-            val isASpecClass = completeClassName.contains("spec")
-            (isATestClass || isASpecClass) && !isAJUnitClass && !isAGradleClass
+            try {
+                val traceClass = Class.forName(trace.className)
+                val method = traceClass.getMethod(trace.methodName)
+                isTestMethod(method)
+            } catch (exception: Exception) {
+                false
+            }
         }
         if (testCaseTrace != null) {
             return "${testCaseTrace.className}_${testCaseTrace.methodName}"
@@ -101,4 +103,7 @@ class Camera<in A>(
                 "to use Kotlin Snapshot")
         }
     }
+
+    private fun isTestMethod(method: Method): Boolean =
+        method.annotations.any { TEST_ANNOTATION == it.annotationClass.qualifiedName  }
 }

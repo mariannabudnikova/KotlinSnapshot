@@ -30,10 +30,11 @@ class InferenceNameSpec {
     }
 }
 
-class InvalidClassName {
+class ValidClassName {
 
-    @Test(expected = TestNameNotFoundException::class)
-    fun if_the_test_name_can_not_be_found_and_exception_will_be_thrown() {
+    @Test
+    fun the_snap_test_name_will_be_inferred_even_the_test_class_does_not_contains_test_or_spec(
+    ) {
         val fran = Developer("Fran", 1)
         fran.matchWithSnapshot()
     }
