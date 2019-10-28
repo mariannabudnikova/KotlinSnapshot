@@ -16,7 +16,13 @@ class GsonUTCDateAdapter : JsonSerializer<Date> {
     private val dateFormat: DateFormat
 
     init {
-        dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX", Locale.US)
+        // SSSX is the default parser, but it is not supported by Android
+        // Fallback to SSSZ parsing if the adapter is used in Android project
+        dateFormat = try {
+            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX", Locale.US)
+        } catch (e: IllegalArgumentException) {
+            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.US)
+        }
         dateFormat.timeZone = TimeZone.getTimeZone("UTC")
     }
 
