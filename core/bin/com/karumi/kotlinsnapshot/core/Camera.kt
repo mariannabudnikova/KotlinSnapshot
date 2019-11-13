@@ -62,7 +62,7 @@ class Camera(relativePath: String = "") {
         private val purgedDirectories = HashSet<String>()
         fun createSnapshotDir(relativePath: String): File {
             val dir = System.getProperty("user.dir")
-            val snapshotDirPath = Paths.get(dir, relativePath, "__snapshot__").toString()
+            val snapshotDirPath = new File(dir, relativePath, "__snapshot__").toString()
             val snapshotDir = File(snapshotDirPath)
             snapshotDir.mkdirs()
             return snapshotDir
