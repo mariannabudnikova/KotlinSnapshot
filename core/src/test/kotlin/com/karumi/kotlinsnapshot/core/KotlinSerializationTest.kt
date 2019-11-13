@@ -3,9 +3,11 @@ package com.karumi.kotlinsnapshot.core
 import com.karumi.kotlinsnapshot.KotlinSnapshot
 import com.karumi.kotlinsnapshot.matchWithSnapshot
 import org.junit.Test
+
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
+
 import java.util.TimeZone
 import java.util.Locale
 
@@ -210,9 +212,10 @@ class KotlinSerializationTest {
 
     @Test
     fun `should serialize Date object with time and timezone`() {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd:HH:mm:ss.SSS", Locale.US)
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd:HH:mm:ss.SSSZ", Locale.US)
         dateFormat.timeZone = TimeZone.getTimeZone("GMT")
-        val date = dateFormat.parse("2007-12-03:18:46:19.111")
+
+        val date = dateFormat.parse("2007-12-03:18:46:19.111+0000")
         date.matchWithSnapshot()
     }
 

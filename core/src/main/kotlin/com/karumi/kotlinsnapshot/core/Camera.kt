@@ -3,7 +3,6 @@ package com.karumi.kotlinsnapshot.core
 import com.karumi.kotlinsnapshot.exceptions.TestNameNotFoundException
 import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch
 import java.io.File
-import java.nio.file.Paths
 
 internal class Camera(
     private val serializationModule: SerializationModule,
@@ -25,23 +24,24 @@ internal class Camera(
         else
             extractTestCaseName()
         val snapshotFile = getFile(snapshotTestCaseName)
-        if (snapshotFile.exists())
+        if (snapshotFile.exists()) {
             matchValueWithExistingSnapshot(snapshotFile, value)
-        else
+        } else {
             writeSnapshot(false, snapshotFile, value)
+            throw java.lang.Exception("Snapshot does not exist! $snapshotTestCaseName")
+        }
     }
 
     private fun getFile(testCaseName: TestCaseName): File =
         if (testClassAsDirectory) {
             val testClassName = testCaseName.className
                 ?: extractor.getTestStackElement()?.className ?: ""
-            Paths.get(
-                snapshotDir.absolutePath,
-                testClassName,
-                "${testCaseName.methodName}.snap"
-            ).toFile().also {
-                it.parentFile.mkdirs()
-            }
+            File(snapshotDir.absolutePath)
+                .resolve(testClassName)
+                .resolve("${testCaseName.methodName}.snap")
+                .also {
+                    it.parentFile.mkdirs()
+                }
         } else {
             File(snapshotDir, "$testCaseName.snap")
         }
@@ -82,8 +82,7 @@ internal class Camera(
         private val purgedDirectories = HashSet<String>()
         fun createSnapshotDir(relativePath: String): File {
             val dir = System.getProperty("user.dir")
-            val snapshotDirPath = Paths.get(dir, relativePath, "__snapshot__").toString()
-            val snapshotDir = File(snapshotDirPath)
+            val snapshotDir = File(dir).resolve(relativePath).resolve("__snapshot__")
             snapshotDir.mkdirs()
             return snapshotDir
         }
