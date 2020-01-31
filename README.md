@@ -1,6 +1,5 @@
-# ![Karumi logo](https://cloud.githubusercontent.com/assets/858090/11626547/e5a1dc66-9ce3-11e5-908d-537e07e82090.png) KotlinSnapshot [![Build Status](https://travis-ci.org/Karumi/KotlinSnapshot.svg?branch=master)](https://travis-ci.org/Karumi/KotlinSnapshot) 
-
-Snapshot Testing framework for Kotlin.
+# KotlinSnapshot
+Textual snapshot testing for 
 
 ## What is this?
 
@@ -15,12 +14,8 @@ buildscript {
   repositories {
     mavenCentral()
   }
-  dependencies {
-    classpath 'com.karumi.kotlinsnapshot:plugin:2.2.0'
-  }
 }
 
-apply plugin: 'com.karumi.kotlin-snapshot'
 ```
 
 Invoke the extension function named ``matchWithSnapshot`` from any instance. The name of the snapshot is not mandatory, if you don't specify it as the first ``matchWithSnapshot`` param the library will infer it from the test execution context. Example:
