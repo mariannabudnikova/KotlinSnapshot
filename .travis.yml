@@ -22,7 +22,5 @@ android:
 script:
   - ./gradlew ktlint test install --info
   - ./gradlew install
-  - cd KotlinConsumer
-  - ./gradlew test --info
   - cd ../AndroidConsumer
   - ./gradlew test --info

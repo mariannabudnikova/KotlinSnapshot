@@ -1,11 +1,19 @@
 buildscript {
-    ext.kotlin_version = '1.3.20'
+    ext.androidGradleVersion = "3.5.0"
+    ext.gradlePluginsVersion = "0.27.0"
+
+    ext.kotlin_version = '1.3.50'
+
     repositories {
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
+        maven { url 'https://forge-magic-mirror.awsvip.dbxnw.net/maven/' }
+        mavenCentral()
+        jcenter()
+        google()
+        maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "com.android.tools.build:gradle:$androidGradleVersion"
+        classpath "com.github.ben-manes:gradle-versions-plugin:$gradlePluginsVersion"
     }
 }

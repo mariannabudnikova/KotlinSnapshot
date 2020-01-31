@@ -8,7 +8,7 @@ internal class Camera(
     private val serializationModule: SerializationModule,
     private val extractor: TestCaseExtractor,
     private val testClassAsDirectory: Boolean = false,
-    private val relativePath: String = ""
+    relativePath: String = ""
 ) {
     private val snapshotDir: File
     private val dmp = DiffMatchPatch()
@@ -63,7 +63,7 @@ internal class Camera(
             writeSnapshot(true, snapshotFile, value)
         else if (hasChanged) {
             val msg = DiffPrinter.toReadableConsoleMessage(snapshotFile.name, diffs)
-            throw SnapshotException(diffs, msg, snapshotContents, valueString)
+            throw SnapshotException(msg, snapshotContents, valueString)
         }
     }
 
